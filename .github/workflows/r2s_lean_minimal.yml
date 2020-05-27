@@ -157,10 +157,13 @@ jobs:
           mv ../../scripts/check_wan4.sh package/base-files/files/usr/bin && sed -i '/exit/i\/bin/sh /usr/bin/check_wan4.sh &' package/base-files/files/etc/rc.local
           mv ../../scripts/autoupdate.sh package/base-files/files/root/au.sh && chmod +x package/base-files/files/root/au.sh
           echo -e '\nDYC Build\n' >> package/base-files/files/etc/banner
-          #sailor add 004
+          echo 'sailor add fix_rtl8812au.diff 004'
           cd ../scripts/sd-fuse/
+          echo 'entry ../scripts/sd-fuse/'
           git apply ../../../fix_rtl8812au.diff
-          cd ../../friendlywrt/   
+          echo 'git apply ../../../fix_rtl8812au.diff'
+          cd ../../friendlywrt/  
+          echo 'Completed patch:fix_rtl8812au.diff.' 
 
       - name: Add OpenClash
         run: |
