@@ -159,9 +159,18 @@ jobs:
           echo -e '\nDYC Build\n' >> package/base-files/files/etc/banner
           echo 'sailor add fix_rtl8812au.diff 004'
           ls
+          echo 'xxx111'
           cd ../scripts/sd-fuse/
           ls
           echo 'entry ../scripts/sd-fuse/'
+          cd ../
+          ls
+          echo 'xxx222'
+          cd ../
+          ls
+          echo 'xxx333'
+          cd ../
+          ls
           git apply ../../../fix_rtl8812au.diff
           echo 'git apply ../../../fix_rtl8812au.diff'
           cd ../../friendlywrt/  
