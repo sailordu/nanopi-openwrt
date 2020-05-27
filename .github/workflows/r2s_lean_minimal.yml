@@ -158,7 +158,9 @@ jobs:
           mv ../../scripts/autoupdate.sh package/base-files/files/root/au.sh && chmod +x package/base-files/files/root/au.sh
           echo -e '\nDYC Build\n' >> package/base-files/files/etc/banner
           echo 'sailor add fix_rtl8812au.diff 004'
+          ls
           cd ../scripts/sd-fuse/
+          ls
           echo 'entry ../scripts/sd-fuse/'
           git apply ../../../fix_rtl8812au.diff
           echo 'git apply ../../../fix_rtl8812au.diff'
