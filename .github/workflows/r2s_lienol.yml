@@ -66,9 +66,6 @@ jobs:
           git checkout origin/master-v19.07.1
           git rebase adc1a9a3676b8d7be1b48b5aed185a94d8e42728^ --onto tmp -X theirs
           rm target/linux/rockchip-rk3328/patches-4.14/0001-net-thunderx-workaround-BGX-TX-Underflow-issue.patch
-          #sailor add 004
-          cd ../scripts/sd-fuse/ && git apply ../../../fix_rtl8812au.diff
-          cd ../../friendlywrt/          
           sed -i '/ipv6/,+3d' package/base-files/files/root/setup.sh
           git checkout upstream/dev-19.07 -- feeds.conf.default
           sed -i 's/Lienol\/openwrt-package/SuLingGG\/openwrt-package/' feeds.conf.default
@@ -76,6 +73,10 @@ jobs:
           sed -i 's/option fullcone\t1/option fullcone\t0/' package/network/config/firewall/files/firewall.config
           sed -i '/8.8.8.8/d' package/base-files/files/root/setup.sh
           echo -e '\nDYC Build\n'  >> package/base-files/files/etc/banner
+          echo 'sailor fix build-kernel.sh support rtl8812au'
+          cp -a ../../build-kernel.sh ../scripts/sd-fuse/
+          chmod +x ../scripts/sd-fuse/build-kernel.sh
+          echo 'Completed to patch:build-kernel.sh'          
           
       - name: Mod luci
         run: |
