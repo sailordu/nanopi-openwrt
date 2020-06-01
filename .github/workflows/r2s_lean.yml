@@ -99,7 +99,7 @@ jobs:
           echo 'sailor fix build-kernel.sh support rtl8812au'
           cp -a ../../build-kernel.sh ../scripts/sd-fuse/
           chmod +x ../scripts/sd-fuse/build-kernel.sh
-          echo 'Completed to patch:build-kernel.sh'          
+          echo 'Completed to patch:build-kernel.sh'
 
       - name: Build FriendlyWrt
         run: |
