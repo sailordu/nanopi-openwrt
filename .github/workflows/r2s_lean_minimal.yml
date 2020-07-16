@@ -1,13 +1,13 @@
 name: r2s Lean版openwrt minimal 
 
 on:
-  push:
-    branches:
-      - master
-    paths:
-      - '.github/workflows/r2s_lean_minimal.yml'
-  schedule:
-    - cron: '10 08 * * *'
+  #push:
+  #  branches:
+  #    - master
+  #  paths:
+  #    - '.github/workflows/r2s_lean_minimal.yml'
+  #schedule:
+  #  - cron: '10 08 * * *'
 
 jobs:
 
