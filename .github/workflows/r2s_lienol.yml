@@ -73,6 +73,7 @@ jobs:
           sed -i 's/option fullcone\t1/option fullcone\t0/' package/network/config/firewall/files/firewall.config
           sed -i '/8.8.8.8/d' package/base-files/files/root/setup.sh
           echo -e '\nDYC Build\n'  >> package/base-files/files/etc/banner
+          # 001
           echo 'sailor fix build-kernel.sh support rtl8812au'
           cp -a ../../build-kernel.sh ../scripts/sd-fuse/
           chmod +x ../scripts/sd-fuse/build-kernel.sh
