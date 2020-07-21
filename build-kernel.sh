@@ -27,8 +27,8 @@ true ${KERNEL_LOGO:=}
 KERNEL_REPO=https://github.com/friendlyarm/kernel-rockchip
 KERNEL_BRANCH=nanopi-r2-v5.4.y
 
-declare -a KERNEL_3RD_DRIVERS=("https://github.com/friendlyarm/rtl8821CU" "https://github.com/friendlyarm/rtl8822bu" "https://github.com/sailordu/rtl8812au-2")
-declare -a KERNEL_3RD_DRIVER_BRANCHES=("nanopi-r2" "nanopi-r2" "driver-5.6.4")
+declare -a KERNEL_3RD_DRIVERS=("https://github.com/friendlyarm/rtl8821CU" "https://github.com/friendlyarm/rtl8822bu" "https://github.com/sailordu/rtl8812au-3")
+declare -a KERNEL_3RD_DRIVER_BRANCHES=("nanopi-r2" "nanopi-r2" "master")
 declare -a KERNEL_3RD_DRIVER_NAME=("rtl8821CU" "rtl8822bu" "rtl8812au")
 
 ARCH=arm64
