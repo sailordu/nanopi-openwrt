@@ -42,16 +42,25 @@ KERNEL_BRANCH=nanopi-r2-v5.4.y
 # declare -a KERNEL_3RD_DRIVER_BRANCHES=("v5.7.0")
 # declare -a KERNEL_3RD_DRIVER_NAME=("rtl8812au")
 
+# rtl8812-1
+declare -a KERNEL_3RD_DRIVERS=("https://github.com/sailordu/rtl8812au-1")
+declare -a KERNEL_3RD_DRIVER_BRANCHES=("master")
+declare -a KERNEL_3RD_DRIVER_NAME=("rtl8812au")
+
 # rtl8812-2
 # declare -a KERNEL_3RD_DRIVERS=("https://github.com/sailordu/rtl8812au-2")
 # declare -a KERNEL_3RD_DRIVER_BRANCHES=("driver-5.6.4")
 # declare -a KERNEL_3RD_DRIVER_NAME=("rtl8812au")
 
 # rtl8812-3
-declare -a KERNEL_3RD_DRIVERS=("https://github.com/sailordu/rtl8812au-3")
-declare -a KERNEL_3RD_DRIVER_BRANCHES=("master")
-declare -a KERNEL_3RD_DRIVER_NAME=("rtl8812au")
+# declare -a KERNEL_3RD_DRIVERS=("https://github.com/sailordu/rtl8812au-3")
+# declare -a KERNEL_3RD_DRIVER_BRANCHES=("master")
+# declare -a KERNEL_3RD_DRIVER_NAME=("rtl8812au")
 
+# rtl8812-5.6.4.2
+# declare -a KERNEL_3RD_DRIVERS=("https://github.com/sailordu/rtl8812au-5.6.4.2")
+# declare -a KERNEL_3RD_DRIVER_BRANCHES=("master")
+# declare -a KERNEL_3RD_DRIVER_NAME=("rtl8812au")
 
 ARCH=arm64
 KCFG=nanopi-r2_linux_defconfig
