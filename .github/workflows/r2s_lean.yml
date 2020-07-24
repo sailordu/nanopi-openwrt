@@ -102,10 +102,10 @@ jobs:
           mv ../../scripts/check_wan4.sh package/base-files/files/usr/bin && sed -i '/exit/i\/bin/sh /usr/bin/check_wan4.sh &' package/base-files/files/etc/rc.local
           echo -e '\nDYC Build\n'  >> package/base-files/files/etc/banner
           # 003
-          echo 'sailor fix build-kernel.sh support rtl8812au'
-          cp -a ../../build-kernel.sh ../scripts/sd-fuse/
-          chmod +x ../scripts/sd-fuse/build-kernel.sh
-          echo 'Completed to patch:build-kernel.sh'
+          # echo 'sailor fix build-kernel.sh support rtl8812au'
+          # cp -a ../../build-kernel.sh ../scripts/sd-fuse/
+          # chmod +x ../scripts/sd-fuse/build-kernel.sh
+          # echo 'Completed to patch:build-kernel.sh'
 
       - name: Build FriendlyWrt
         run: |
