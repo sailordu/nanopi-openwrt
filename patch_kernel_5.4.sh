@@ -8,7 +8,7 @@ git clone https://github.com/openwrt/openwrt && cd openwrt/
 #5.4.51
 #git checkout 039fd27173236d22736feb0773da5f728f759c79
 #5.4.40
-git checkout 0fed36dd484272eb546dd69f4dc84221ca5f01a5 -b br-5.4.40
+git checkout 51a7184a7d06078343bdac5dec69cd5f97de4558 -b br-5.4.40
 #rm target/linux/generic/pending-5.4/403-mtd-hook-mtdsplit-to-Kbuild.patch
 #rm target/linux/generic/hack-5.4/700-swconfig_switch_drivers.patch
 cp -a ./target/linux/generic/files/* ../kernel/
