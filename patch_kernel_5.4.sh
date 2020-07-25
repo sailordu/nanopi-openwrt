@@ -5,6 +5,10 @@ wget https://github.com/armbian/build/raw/master/patch/kernel/rockchip64-dev/RK3
 git apply RK3328-enable-1512mhz-opp.patch
 cd ../
 git clone https://github.com/openwrt/openwrt && cd openwrt/
+git checkout b6443367d8bca111a64f4c111a872fd100cc7d90
+git checkout cfd2f3bf6f4825b66e9a4ca9cba7c65b93eb89c7
+git checkout d1100c76b33ff68c6db0f5fa31a26532bdbb15c4
+git checkout ed2015c38617ed6624471e77f27fbb0c58c8c660
 #rm target/linux/generic/pending-5.4/403-mtd-hook-mtdsplit-to-Kbuild.patch
 #rm target/linux/generic/hack-5.4/700-swconfig_switch_drivers.patch
 cp -a ./target/linux/generic/files/* ../kernel/
