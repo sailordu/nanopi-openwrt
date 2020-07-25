@@ -1,8 +1,18 @@
 ## Nanopi r1s r2s openwrt 固件自动编译
+Fork from klever1988/nanopi-openwrt
+
+### 此编译用于适配自己使用的 RTL8812AU USB WIFI
+最新可用版本如下，kernel基于5.4.40：
+自动发布 R2S-Minimal-2020-07-01  
+https://github.com/sailordu/nanopi-openwrt/releases/download/R2S-Minimal-2020-07-01/R2S-Minimal-2020-07-01-ROM.zip
+自动发布 R2S-Lean-2020-07-01 
+https://github.com/sailordu/nanopi-openwrt/releases/download/R2S-Lean-2020-07-01/R2S-Lean-2020-07-01-ROM.zip
+
+目前代码kernel已经升级到5.4.52的版本，RTL8812AU USB WIFI无法使用，插入USB WIFI无法开机，暂时没有解决。
 
 ### 发布地址：
 
-https://github.com/klever1988/nanopi-openwrt/releases  
+https://github.com/sailordu/nanopi-openwrt/releases  
 (请记得下载zip包之后解压出里头的固件包再刷，不要拿zip直刷，会失败的！)
 
 ### 编译方式：
