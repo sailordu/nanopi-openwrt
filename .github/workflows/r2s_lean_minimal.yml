@@ -164,7 +164,7 @@ jobs:
           mv ../../scripts/check_wan4.sh package/base-files/files/usr/bin && sed -i '/exit/i\/bin/sh /usr/bin/check_wan4.sh &' package/base-files/files/etc/rc.local
           mv ../../scripts/autoupdate.sh package/base-files/files/root/au.sh && chmod +x package/base-files/files/root/au.sh
           echo -e '\nDYC Build\n' >> package/base-files/files/etc/banner
-          #002
+          #003
           echo 'sailor fix build-kernel.sh support rtl8812au'
           cp -a ../../build-kernel.sh ../scripts/sd-fuse/
           chmod +x ../scripts/sd-fuse/build-kernel.sh
