@@ -10,7 +10,7 @@ https://github.com/sailordu/nanopi-openwrt/releases/download/R2S-Minimal-2020-07
 自动发布 R2S-Lean-2020-07-01  
 https://github.com/sailordu/nanopi-openwrt/releases/download/R2S-Lean-2020-07-01/R2S-Lean-2020-07-01-ROM.zip
 
-目前代码kernel已经升级到5.4.52的版本，RTL8812AU USB WIFI无法使用，插入USB WIFI无法开机，暂时没有解决。
+目前代码kernel已经升级到5.4.52版本，RTL8812AU USB WIFI无法使用，插入USB WIFI无法开机，暂时没有解决。
 
 ### 发布地址：
 
