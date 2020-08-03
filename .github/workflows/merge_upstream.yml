@@ -48,5 +48,5 @@ jobs:
         fi
     - name: Push Commits
       env:
-        GITHUB_TOKEN: ${{ secrets.sec_token }}
+        GITHUB_TOKEN: ${{ secrets.sailordu_token }}
       run: git push origin $master
