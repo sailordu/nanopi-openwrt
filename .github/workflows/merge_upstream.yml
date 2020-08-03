@@ -48,8 +48,6 @@ jobs:
         fi
         
     - name: Push Commits
-      id: push-commits
-      uses: actions/push-commits@master
       env:
         GITHUB_TOKEN: ${{ secrets.sec_token }}
       with:
