@@ -50,6 +50,4 @@ jobs:
     - name: Push Commits
       env:
         GITHUB_TOKEN: ${{ secrets.sec_token }}
-      run: |
-        --header 'authorization: sailordu ${{ secrets.sec_token }}' 
-        git push origin $master
+      run: git push origin $master
