@@ -24,16 +24,12 @@ jobs:
 
     - name: Checkout
       uses: actions/checkout@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.sec_token }}
       with:
         ref: master
         fetch-depth: 0
         lfs: true
 
     - name: Set git identity
-      env:
-        GITHUB_TOKEN: ${{ secrets.sec_token }}
       run : |
         git config --global user.email "sailor.du@gmail.com"
         git config --global user.name "sailordu"
@@ -41,8 +37,6 @@ jobs:
       run: git pull https://github.com/klever1988/nanopi-openwrt.git --log --no-commit
 
     - name: Apply commit changes
-      env:
-        GITHUB_TOKEN: ${{ secrets.sec_token }}
       run: |
         if [ -f ./.git/MERGE_MSG ]; then
         mkdir ./tmp && cp ./.git/MERGE_MSG ./tmp/message
@@ -56,5 +50,6 @@ jobs:
     - name: Push Commits
       env:
         GITHUB_TOKEN: ${{ secrets.sec_token }}
-      run: 
+      run: |
+        --header 'authorization: sailordu ${{ secrets.sec_token }}' 
         git push origin $master
