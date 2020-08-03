@@ -50,5 +50,9 @@ jobs:
     - name: Push Commits
       env:
         GITHUB_TOKEN: ${{ secrets.sec_token }}
-      with:
-        run: git push origin $master
+      run: 
+        git update-index --chmod=+x workflow
+        git add .
+        git commit -m "Changing permission of workflow"
+        git push
+        git push origin $master
