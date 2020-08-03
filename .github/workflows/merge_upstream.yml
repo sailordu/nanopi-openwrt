@@ -51,7 +51,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.sec_token }}
       run: 
-        git update-index --chmod=+w .github/workflows
+        git update-index --chmod=755 .github/workflows
         git add .
         git commit -m "Changing permission of workflows"
         git push
