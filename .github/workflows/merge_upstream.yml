@@ -46,7 +46,11 @@ jobs:
         else
         echo "There is no merge commits."
         fi
+        
     - name: Push Commits
-      run: git push origin $master
+      id: push-commits
+      uses: push-commits@master
       env:
         GITHUB_TOKEN: ${{ secrets.sec_token }}
+      with:
+        run: git push origin $master
