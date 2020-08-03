@@ -49,7 +49,7 @@ jobs:
         
     - name: Push Commits
       id: push-commits
-      uses: push-commits@master
+      uses: actions/push-commits@master
       env:
         GITHUB_TOKEN: ${{ secrets.sec_token }}
       with:
