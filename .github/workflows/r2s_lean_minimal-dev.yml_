@@ -1,20 +1,19 @@
-name: r2s Lean版openwrt minimal 
+name: r2s Lean版openwrt minimal
 
 on:
   push:
-    branches:
-      - master
+    branches: [ master ]
     paths:
-      - '.github/workflows/r2s_lean_minimal.yml'
+      - '.github/workflows/r2s_lean_minimal-dev.yml'
   schedule:
-    - cron: '10 08 */5 * *'
+    - cron: '10 08 * * *'
 
 jobs:
 
   build:
 
     runs-on: ubuntu-latest
-    if: github.repository == 'sailordu/nanopi-openwrt'
+    if: github.repository == 'klever1988/nanopi-openwrt'
 
     steps:
 
@@ -49,7 +48,7 @@ jobs:
 
       - name: Patch Kernel
         run: |
-          . patch_kernel_5.4.sh
+          . patch_kernel_5.4-test.sh
 
       - name: Mods
         run: |
@@ -130,37 +129,24 @@ jobs:
           ' >> configs/config_rk3328
           cd friendlywrt
           git config --local user.email "action@github.com" && git config --local user.name "GitHub Action"
-          git remote add upstream https://github.com/coolsnowwolf/openwrt && git fetch upstream
-          git checkout upstream/lede-17.01 -b tmp
-          #git checkout 33f7cb735300bd9a099995236ed768c8925fec75 -- target/linux/sunxi/image/
+          git remote add upstream https://github.com/coolsnowwolf/lede && git fetch upstream
+          git checkout upstream/master -b tmp
+          rm -r target/linux/sunxi/image
+          git checkout 33f7cb735300bd9a099995236ed768c8925fec75 -- target/linux/sunxi/image/
           git rm README.md
           git commit -m 'reset'
-          git checkout origin/master-v19.07.1
+          git checkout master-v19.07.1
           git rebase adc1a9a3676b8d7be1b48b5aed185a94d8e42728^ --onto tmp -X theirs
-          #git revert 33abeff31cfb2ae58adf167c82bd36b5f56a5b1c -X ours || true
-          #rm -rf package/kernel/mt76/Makefile package/network/services/hostapd package/kernel/mac80211
-          #git checkout 0a395d6fd6c38c554709197ae3cd6315f143cd7a -- package/kernel/mt76/Makefile package/network/services/hostapd package/kernel/mac80211
           rm -f target/linux/rockchip-rk3328/patches-4.14/0001-net-thunderx-workaround-BGX-TX-Underflow-issue.patch target/linux/generic/hack-4.14/999-net-patch-linux-kernel-to-support-shortcut-fe.patch
           sed -i '/ipv6/,+3d' package/base-files/files/root/setup.sh
-          git checkout upstream/lede-17.01 -- feeds.conf.default
+          git checkout upstream/master -- feeds.conf.default
           sed -i -E 's/#(src-git.+)(helloworld.+)/\1\2/' feeds.conf.default
           cd package/lean/
           git clone https://github.com/NateLol/luci-app-oled
-          #git clone https://github.com/jerrykuku/lua-maxminddb.git
-          #git clone https://github.com/jerrykuku/luci-app-vssr.git
-          #cd luci-app-vssr/root/etc/
-          #echo 'china_ssr.txt
-          #config/black.list
-          #config/white.list
-          #dnsmasq.oversea/oversea_list.conf
-          #dnsmasq.ssr/ad.conf
-          #dnsmasq.ssr/gfw_base.conf' | xargs rm
-          #cd ../../../
           rm -rf luci-theme-argon
           git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git
           cd ../../
           git apply ../../enable_autocore.diff
-          #git apply ../../fix_cpufreq.diff
           sed -i 's/@LINUX_5_4//' package/lean/luci-app-flowoffload/Makefile
           sed -i '/uci commit luci/i\uci set luci.main.mediaurlbase="/luci-static/argon"' package/lean/default-settings/files/zzz-default-settings
           sed -i '/exit/i\chown -R root:root /usr/share/netdata/web' package/lean/default-settings/files/zzz-default-settings
@@ -170,11 +156,6 @@ jobs:
           mv ../../scripts/check_wan4.sh package/base-files/files/usr/bin && sed -i '/exit/i\/bin/sh /usr/bin/check_wan4.sh &' package/base-files/files/etc/rc.local
           mv ../../scripts/autoupdate.sh package/base-files/files/root/au.sh && chmod +x package/base-files/files/root/au.sh
           echo -e '\nDYC Build\n' >> package/base-files/files/etc/banner
-          #004
-          # echo 'sailor fix build-kernel.sh support rtl8812au'
-          # cp -a ../../build-kernel.sh ../scripts/sd-fuse/
-          # chmod +x ../scripts/sd-fuse/build-kernel.sh
-          # echo 'Completed to patch:build-kernel.sh' 
 
       - name: Add OpenClash
         run: |
@@ -221,8 +202,7 @@ jobs:
           md5sum *img* > md5sum.txt
           cd ..
           zip -r artifact.zip ./artifact/
-          #release_tag="R2S-Lean-$(date +%Y-%m-%d)-Minimal"
-          release_tag="R2S-Minimal-$(date +%Y-%m-%d)"
+          release_tag="R2S-Minimal-$(date +%Y-%m-%d)-dev"
           echo "##[set-output name=release_tag;]$release_tag"
       - name: Create Release
         id: create_release
@@ -231,7 +211,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.sec_token }}
         with:
           tag_name: ${{ steps.assemble_artifact.outputs.release_tag }}
-          release_name: 自动发布 ${{ steps.assemble_artifact.outputs.release_tag }}
+          release_name: 仅测试勿使用 ${{ steps.assemble_artifact.outputs.release_tag }}
           draft: false
           prerelease: false
       - name: Upload Release Asset
