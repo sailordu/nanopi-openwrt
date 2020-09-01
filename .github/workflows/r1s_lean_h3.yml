@@ -31,7 +31,8 @@ jobs:
           sudo apt-get update
           sudo apt-get -y --no-install-recommends install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs gcc-multilib g++-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler
           curl https://raw.githubusercontent.com/friendlyarm/build-env-on-ubuntu-bionic/master/install.sh  | sed '/#/d' | sed 's/\\//g' | sed 's/exit 0//g' | sed 's/sudo apt -y install//g' | sed 's/sudo apt-get -y install//g' | sed 's/:i386//g' | xargs sudo apt-get -y --no-install-recommends install
-          sudo rm -rf /usr/share/dotnet /usr/local/lib/android/sdk
+          docker rmi `docker images -q`
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android/sdk /usr/local/share/boost /opt/ghc
 
       - name: Install Repo
         run: |
@@ -42,7 +43,7 @@ jobs:
         run: |
           mkdir friendlywrt-h3
           cd friendlywrt-h3
-          repo init -u https://github.com/friendlyarm/friendlywrt_manifests -b master -m h3.xml --repo-url=https://github.com/friendlyarm/repo --no-clone-bundle --depth=1
+          repo init -u https://github.com/friendlyarm/friendlywrt_manifests -b master-v19.07.1 -m h3.xml --repo-url=https://github.com/friendlyarm/repo --no-clone-bundle --depth=1
           repo sync -c --no-tags --no-clone-bundle -j8
           cd friendlywrt/ && git fetch --unshallow
 
@@ -54,21 +55,20 @@ jobs:
           . ../remove_unused_config.sh
           cat ../app_config.seed >> configs/config_h3
           echo '# CONFIG_V2RAY_COMPRESS_UPX is not set' >> configs/config_h3
-          sed -i '/docker/Id;/containerd/Id;/runc/Id;/iptparser/Id' configs/config_h3 #fix compile error
           cd friendlywrt
           git config --local user.email "action@github.com" && git config --local user.name "GitHub Action"
-          git remote add upstream https://github.com/coolsnowwolf/lede && git fetch upstream
-          git checkout upstream/master -b tmp
-          git checkout 33f7cb735300bd9a099995236ed768c8925fec75 -- target/linux/sunxi/image/
+          git remote add upstream https://github.com/coolsnowwolf/openwrt && git fetch upstream
+          git checkout upstream/lede-17.01 -b tmp
+          #git checkout 33f7cb735300bd9a099995236ed768c8925fec75 -- target/linux/sunxi/image/
           git rm README.md
           git commit -m 'reset'
-          git checkout master-v18.06.1
-          git rebase e561fa6fcc2e744c4a8cbfa1b4cf65107a675414^ --onto 1dee4bedde119aadc586ebf7105cfded3c220711 #bypass a commit that cause an error for next rebasing
-          git rebase 52a38e950de0686cb5a2d3e8e05c38027a8e3d0d^ --onto tmp -X theirs
-          #rm target/linux/allwinner-h5/patches-4.14/0001-net-thunderx-workaround-BGX-TX-Underflow-issue.patch
-          git checkout upstream/master -- feeds.conf.default
+          git checkout master-v19.07.1
+          git rebase adc1a9a3676b8d7be1b48b5aed185a94d8e42728^ --onto tmp -X theirs
+          rm -f target/linux/allwinner-h5/patches-4.14/0001-net-thunderx-workaround-BGX-TX-Underflow-issue.patch target/linux/generic/hack-4.14/999-net-patch-linux-kernel-to-support-shortcut-fe.patch
+          git checkout upstream/lede-17.01 -- feeds.conf.default
           sed -i -E 's/#(src-git.+)(helloworld.+)/\1\2/' feeds.conf.default
           cd package/lean/
+          git clone https://github.com/rufengsuixing/luci-app-adguardhome
           #git clone https://github.com/jerrykuku/lua-maxminddb.git
           #git clone https://github.com/jerrykuku/luci-app-vssr.git
           #cd luci-app-vssr/root/etc/
@@ -89,7 +89,7 @@ jobs:
           sed -i '/exit/i\find /etc/rc.d/ -name *docker* -delete' package/lean/default-settings/files/zzz-default-settings
           sed -i 's/option fullcone\t1/option fullcone\t0/' package/network/config/firewall/files/firewall.config
           sed -i '/8.8.8.8/d' package/base-files/files/root/setup.sh
-          echo -e '\nDYC Build\n'  >> package/base-files/files/etc/banner
+          echo -e '\nDYC Build\n' >> package/base-files/files/etc/banner
 
       - name: Build FriendlyWrt
         run: |
@@ -97,6 +97,7 @@ jobs:
           cp configs/config_h3 friendlywrt/.config
           cd friendlywrt
           ./scripts/feeds update -a && ./scripts/feeds install -a
+          sed -i '/STAMP_BUILT/d' feeds/packages/utils/runc/Makefile feeds/packages/utils/containerd/Makefile #fix compile error
           make defconfig && make download -j8
           make -s -j$(nproc) || make V=s -j1
 
@@ -125,7 +126,8 @@ jobs:
           sed -i '130,150 {/build_friendlywrt/d}' scripts/build.sh
           echo -e '\nCONFIG_TCP_CONG_ADVANCED=y' >> kernel/arch/arm/configs/sunxi_defconfig
           echo -e '\nCONFIG_TCP_CONG_BBR=m' >> kernel/arch/arm/configs/sunxi_defconfig
-          ./build.sh nanopi_r1s_h3.mk	
+          ./build.sh nanopi_r1s_h3.mk
+          cd .. && sudo bash fix_ownership.sh
 
       - name: Zip Files
         run: |
@@ -163,4 +165,3 @@ jobs:
           asset_path: ./artifact.zip
           asset_name: ${{ steps.assemble_artifact.outputs.release_tag }}-ROM.zip
           asset_content_type: application/zip
-

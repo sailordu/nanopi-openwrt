@@ -5,16 +5,16 @@ on:
     branches:
       - master
     paths:
-      - '.github/workflows/r2s_lean_minimal.yml'
+      - '.github/workflows/r2s_lean_minimal-test.yml'
   schedule:
-    - cron: '10 08 */5 * *'
+    - cron: '10 08 * * *'
 
 jobs:
 
   build:
 
     runs-on: ubuntu-latest
-    if: github.repository == 'sailordu/nanopi-openwrt'
+    if: github.repository == 'klever1988/nanopi-openwrt'
 
     steps:
 
@@ -49,7 +49,7 @@ jobs:
 
       - name: Patch Kernel
         run: |
-          . patch_kernel_5.4.sh
+          . patch_kernel_5.4-test.sh
 
       - name: Mods
         run: |
@@ -86,6 +86,7 @@ jobs:
           CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Trojan=y
           CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_V2ray=y
           CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_V2ray_plugin=y
+          CONFIG_PACKAGE_luci-app-ssrserver-python=y
           CONFIG_PACKAGE_luci-app-uhttpd=y
           CONFIG_PACKAGE_luci-app-unblockmusic=y
           CONFIG_PACKAGE_luci-app-v2ray-server=y
@@ -99,12 +100,11 @@ jobs:
           CONFIG_UnblockNeteaseMusic_NodeJS=y
           CONFIG_PACKAGE_luci-app-passwall=y
           CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Brook=y
-          CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_ShadowsocksR_Server=y
+          CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks=y
           CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Trojan=y
           CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Trojan_GO=y
           CONFIG_PACKAGE_luci-app-passwall_INCLUDE_simple-obfs=y
           CONFIG_PACKAGE_luci-app-passwall_INCLUDE_v2ray-plugin=y
-          CONFIG_PACKAGE_luci-app-passwall_INCLUDE_https_dns_proxy=n
           CONFIG_PACKAGE_luci-app-openclash=y
           CONFIG_PACKAGE_luci-app-zerotier=y
           # CONFIG_PACKAGE_luci-app-accesscontrol is not set
@@ -125,11 +125,8 @@ jobs:
           # CONFIG_PACKAGE_libopenssl-devcrypto is not set
           # CONFIG_V2RAY_COMPRESS_UPX is not set
           CONFIG_PACKAGE_luci-app-oled=y
-          CONFIG_PACKAGE_luci-app-adguardhome=y
           CONFIG_PACKAGE_luci-app-flowoffload=y
           # CONFIG_PACKAGE_luci-app-sfe is not set
-          CONFIG_DROPBEAR_ECC=y
-          CONFIG_DROPBEAR_ECC_FULL=y
           ' >> configs/config_rk3328
           cd friendlywrt
           git config --local user.email "action@github.com" && git config --local user.name "GitHub Action"
@@ -140,16 +137,14 @@ jobs:
           git commit -m 'reset'
           git checkout origin/master-v19.07.1
           git rebase adc1a9a3676b8d7be1b48b5aed185a94d8e42728^ --onto tmp -X theirs
-          #git revert 33abeff31cfb2ae58adf167c82bd36b5f56a5b1c -X ours || true
-          #rm -rf package/kernel/mt76/Makefile package/network/services/hostapd package/kernel/mac80211
-          #git checkout 0a395d6fd6c38c554709197ae3cd6315f143cd7a -- package/kernel/mt76/Makefile package/network/services/hostapd package/kernel/mac80211
+          curl 'https://git.openwrt.org/?p=openwrt/openwrt.git;a=patch;h=22378beb581b113def1dc392ef75306a2168a163' > ip-full.patch; git apply --reject ip-full.patch || true
           rm -f target/linux/rockchip-rk3328/patches-4.14/0001-net-thunderx-workaround-BGX-TX-Underflow-issue.patch target/linux/generic/hack-4.14/999-net-patch-linux-kernel-to-support-shortcut-fe.patch
           sed -i '/ipv6/,+3d' package/base-files/files/root/setup.sh
           git checkout upstream/lede-17.01 -- feeds.conf.default
+          sed -i 's/coolsnowwolf\/packages/klever1988\/packages/' feeds.conf.default
           sed -i -E 's/#(src-git.+)(helloworld.+)/\1\2/' feeds.conf.default
           cd package/lean/
           git clone https://github.com/NateLol/luci-app-oled
-          git clone https://github.com/rufengsuixing/luci-app-adguardhome
           #git clone https://github.com/jerrykuku/lua-maxminddb.git
           #git clone https://github.com/jerrykuku/luci-app-vssr.git
           #cd luci-app-vssr/root/etc/
@@ -174,11 +169,6 @@ jobs:
           mv ../../scripts/check_wan4.sh package/base-files/files/usr/bin && sed -i '/exit/i\/bin/sh /usr/bin/check_wan4.sh &' package/base-files/files/etc/rc.local
           mv ../../scripts/autoupdate.sh package/base-files/files/root/au.sh && chmod +x package/base-files/files/root/au.sh
           echo -e '\nDYC Build\n' >> package/base-files/files/etc/banner
-          #004
-          # echo 'sailor fix build-kernel.sh support rtl8812au'
-          # cp -a ../../build-kernel.sh ../scripts/sd-fuse/
-          # chmod +x ../scripts/sd-fuse/build-kernel.sh
-          # echo 'Completed to patch:build-kernel.sh' 
 
       - name: Add OpenClash
         run: |
@@ -210,7 +200,6 @@ jobs:
           cd friendlywrt-rk3328
           sed -i 's/set -eu/set -u/' scripts/mk-friendlywrt.sh
           ./build.sh nanopi_r2s.mk
-          cd .. && sudo bash fix_ownership.sh
 
       - name: Zip Files
         run: |
@@ -226,7 +215,7 @@ jobs:
           md5sum *img* > md5sum.txt
           cd ..
           zip -r artifact.zip ./artifact/
-          release_tag="R2S-Minimal-$(date +%Y-%m-%d)"
+          release_tag="R2S-Minimal-$(date +%Y-%m-%d)-test"
           echo "##[set-output name=release_tag;]$release_tag"
       - name: Create Release
         id: create_release

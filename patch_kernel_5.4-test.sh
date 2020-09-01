@@ -1,13 +1,11 @@
 cd friendlywrt-rk3328
 cd kernel/
 git apply ../../add_fullconenat.diff
-wget https://github.com/armbian/build/raw/master/patch/kernel/rockchip64-dev/RK3328-enable-1512mhz-opp.patch
-git apply RK3328-enable-1512mhz-opp.patch
+wget https://raw.githubusercontent.com/QiuSimons/R2S-OpenWrt/master/PATCH/new/main/999-unlock-1608mhz-rk3328.patch
+git apply 999-unlock-1608mhz-rk3328.patch
 cd ../
-git clone https://github.com/openwrt/openwrt && cd openwrt/
-git checkout 05b8e84362b8455dec6db9b862826f21e8f24341
-#rm target/linux/generic/pending-5.4/403-mtd-hook-mtdsplit-to-Kbuild.patch
-#rm target/linux/generic/hack-5.4/700-swconfig_switch_drivers.patch
+git clone https://github.com/coolsnowwolf/lede && cd lede/
+git checkout 12d0742fd52a6fd32ffd1bd0cf58e33eb416416f
 cp -a ./target/linux/generic/files/* ../kernel/
 ./scripts/patch-kernel.sh ../kernel target/linux/generic/backport-5.4
 ./scripts/patch-kernel.sh ../kernel target/linux/generic/pending-5.4
