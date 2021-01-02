@@ -1,12 +1,12 @@
-name: r2s Lean版openwrt minimal 
+name: r2s Lean版openwrt minimal fix
 
 on:
   push:
     branches: [ master ]
     paths:
-      - '.github/workflows/r2s_lean_minimal.yml'
-  schedule:
-    - cron: '11 08 */5 * *'
+      - '.github/workflows/r2s_lean_minimal_fix.yml'
+  # schedule:
+    # - cron: '11 08 */5 * *'
 
 jobs:
 
@@ -28,7 +28,7 @@ jobs:
         run: . 1_initialization_environment.sh
 
       - name: Clone Source
-        run: . 2_clone_source.sh master-v19.07.1 rk3328
+        run: . 2_clone_source_fix.sh master-v19.07.4 rk3328
 
       - name: Patch Kernel
         run: . patch_kernel_5.4.sh
@@ -45,22 +45,20 @@ jobs:
           git checkout upstream/lede-17.01 -b tmp
           git rm README.md
           git commit -m 'reset'
-          git checkout master-v19.07.1
+          git checkout master-v19.07.4
           git rebase adc1a9a3676b8d7be1b48b5aed185a94d8e42728^ --onto tmp -X theirs
           rm -f target/linux/rockchip-rk3328/patches-4.14/0001-net-thunderx-workaround-BGX-TX-Underflow-issue.patch target/linux/generic/hack-4.14/999-net-patch-linux-kernel-to-support-shortcut-fe.patch
           git checkout upstream/lede-17.01 -- feeds.conf.default && sed -i -E 's/#(src-git.+)(helloworld.+)/\1\2/' feeds.conf.default
           curl 'https://git.openwrt.org/?p=openwrt/openwrt.git;a=patch;h=22378beb581b113def1dc392ef75306a2168a163' | git apply --reject - || true
+          # curl 'https://raw.githubusercontent.com/biliwala/nanopi-openwrt/master/friendlywrt-self.patch' | git apply --reject - || true
           . ../../3_prepare_packages.sh
           . ../../add_openclash.sh
           . ../../add_passwall.sh
+          git apply ../../enable_autocore.diff
           sed -i 's/@LINUX_5_4//' package/lean/luci-app-flowoffload/Makefile
           . ../../5_mods.sh
           mv ../../scripts/check_wan4.sh package/base-files/files/usr/bin && sed -i '/exit/i\/bin/sh /usr/bin/check_wan4.sh &' package/base-files/files/etc/rc.local
           mv ../../scripts/autoupdate.sh package/base-files/files/root/au.sh && chmod +x package/base-files/files/root/au.sh
-          echo 'sailor fix build-kernel.sh support rtl8812au'
-          cp -a ../../build-kernel.sh ../scripts/sd-fuse/
-          chmod +x ../scripts/sd-fuse/build-kernel.sh
-          echo 'Completed to patch:build-kernel.sh'          
 
       - name: Build FriendlyWrt
         run: . 4_build_image.sh friendlywrt-rk3328 nanopi_r2s.mk
@@ -69,7 +67,7 @@ jobs:
         id: assemble_artifact
         run: |
           . x_assemble_artifact.sh
-          release_tag="R2S-Minimal-$(date +%Y-%m-%d)"
+          release_tag="R2S-Minimal-fix-$(date +%Y-%m-%d)"
           echo "##[set-output name=release_tag;]$release_tag"
       - name: Create Release
         id: create_release
