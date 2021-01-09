@@ -3,7 +3,7 @@
   <remote name="origin"
           fetch="."
           revision="refs/heads/master" />
-  <remote name="self" fetch="https://github.com/klever1988" />
+  <remote name="self" fetch="https://github.com/sailordu" />
 
   <project path="kernel" name="kernel-rockchip" remote="origin" revision="refs/heads/nanopi-r2-v5.4.y" />
   <project path="u-boot" name="uboot-rockchip" remote="origin" revision="refs/heads/nanopi-r2-v2014.10" />

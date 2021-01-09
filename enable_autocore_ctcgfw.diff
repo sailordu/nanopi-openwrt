@@ -45,16 +45,3 @@ index 8c0527f84f..6adabeafc7 100755
 +MHz=`echo "$(cat /sys/devices/system/cpu/cpu[04]/cpufreq/cpuinfo_cur_freq)/1000" | bc`
 +TEMP=`echo "scale=2; $(cat /sys/class/thermal/thermal_zone0/temp)/1000" | bc`°
  echo "$MHz MHz $TEMP "
-diff --git a/package/lean/autocore/files/rpcd_10_system.js b/package/lean/autocore/files/rpcd_10_system.js
-index 73638a0b6b..dda369ba5c 100644
---- a/package/lean/autocore/files/rpcd_10_system.js
-+++ b/package/lean/autocore/files/rpcd_10_system.js
-@@ -76,7 +76,7 @@ return L.Class.extend({
- 			_('Hostname'),         boardinfo.hostname,
- 			_('Model'),            boardinfo.model + cpubench.cpubench,
- 			_('CPU Info'),         cpuinfo.cpuinfo,
--			_('Firmware Version'), (L.isObject(boardinfo.release) ? boardinfo.release.description : '')/* + ' / ' : '') + (luciversion || '')*/,
-+			_('Firmware Version'), (L.isObject(boardinfo.release) ? boardinfo.release.description : '') + ' built by DYC'/* + ' / ' : '') + (luciversion || '')*/,
- 			_('Kernel Version'),   boardinfo.kernel,
- 			_('Local Time'),       datestr,
- 			_('Uptime'),           systeminfo.uptime ? '%t'.format(systeminfo.uptime) : null,

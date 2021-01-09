@@ -43,5 +43,5 @@ index 8c0527f84..6adabeafc 100755
 -MHz=`grep 'MHz' /proc/cpuinfo | cut -c11- |sed -n '1p'`
 -TEMP=`sensors 2>/dev/null | grep 'Core 0' | cut -c12-`
 +MHz=`echo "$(cat /sys/devices/system/cpu/cpu[04]/cpufreq/cpuinfo_cur_freq)/1000" | bc`
-+TEMP=`echo "scale=2; $(cat /sys/class/thermal/thermal_zone0/temp)/1000" | bc`¡ã
++TEMP=`echo "scale=2; $(cat /sys/class/thermal/thermal_zone0/temp)/1000" | bc`°
  echo "$MHz MHz $TEMP "
