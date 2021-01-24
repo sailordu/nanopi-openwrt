@@ -12,7 +12,7 @@ jobs:
 
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     if: github.repository == 'sailordu/nanopi-openwrt'
 
     steps:
@@ -28,7 +28,8 @@ jobs:
         run: . 1_initialization_environment.sh
 
       - name: Clone Source
-        run: . 2_clone_source_fix.sh master-v19.07.4 rk3328
+        # run: . 2_clone_source_fix.sh master-v19.07.5 rk3328
+        run: . 2_clone_source.sh master-v19.07.5 rk3328
 
       - name: Patch Kernel
         run: . patch_kernel_5.4.sh
@@ -45,7 +46,7 @@ jobs:
           git checkout upstream/lede-17.01 -b tmp
           git rm README.md
           git commit -m 'reset'
-          git checkout master-v19.07.4
+          git checkout master-v19.07.5
           git rebase adc1a9a3676b8d7be1b48b5aed185a94d8e42728^ --onto tmp -X theirs
           rm -f target/linux/rockchip-rk3328/patches-4.14/0001-net-thunderx-workaround-BGX-TX-Underflow-issue.patch target/linux/generic/hack-4.14/999-net-patch-linux-kernel-to-support-shortcut-fe.patch
           git checkout upstream/lede-17.01 -- feeds.conf.default && sed -i -E 's/#(src-git.+)(helloworld.+)/\1\2/' feeds.conf.default
@@ -54,7 +55,7 @@ jobs:
           . ../../3_prepare_packages.sh
           . ../../add_openclash.sh
           . ../../add_passwall.sh
-          git apply ../../enable_autocore.diff
+          # git apply ../../enable_autocore.diff
           sed -i 's/@LINUX_5_4//' package/lean/luci-app-flowoffload/Makefile
           . ../../5_mods.sh
           mv ../../scripts/check_wan4.sh package/base-files/files/usr/bin && sed -i '/exit/i\/bin/sh /usr/bin/check_wan4.sh &' package/base-files/files/etc/rc.local
