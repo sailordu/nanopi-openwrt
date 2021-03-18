@@ -63,10 +63,10 @@ jobs:
           . ../../5_mods.sh
           mv ../../scripts/check_wan4.sh package/base-files/files/usr/bin && sed -i '/exit/i\/bin/sh /usr/bin/check_wan4.sh &' package/base-files/files/etc/rc.local
           mv ../../scripts/autoupdate.sh package/base-files/files/root/au.sh && chmod +x package/base-files/files/root/au.sh
-          echo 'sailor fix build-kernel.sh support rtl8812au'
-          cp -a ../../build-kernel.sh ../scripts/sd-fuse/
-          chmod +x ../scripts/sd-fuse/build-kernel.sh
-          echo 'Completed to patch:build-kernel.sh'          
+          # echo 'sailor fix build-kernel.sh support rtl8812au'
+          # cp -a ../../build-kernel.sh ../scripts/sd-fuse/
+          # chmod +x ../scripts/sd-fuse/build-kernel.sh
+          # echo 'Completed to patch:build-kernel.sh'          
 
       - name: Build FriendlyWrt
         run: . 4_build_image.sh friendlywrt-rk3328 nanopi_r2s.mk
@@ -78,7 +78,7 @@ jobs:
           tag_commitish="$(git rev-parse HEAD)"
           release_tag="R2S-Minimal-$(date +%Y-%m-%d)"
           mkdir release && mv artifact.zip release/$release_tag-ROM.zip
-          mkdir package && cp -rf $(find ./friendlywrt-rk3328/ -type f -name "*.ipk") package/ && zip -r release/R2S-Package-$(date +%Y-%m-%d).zip package/*
+          mkdir package && cp -rf $(find ./friendlywrt-rk3328/ -type f -name "*.ipk") package/ && zip -jr release/R2S-Package-$(date +%Y-%m-%d).zip package/*
           echo "##[set-output name=tag_commitish;]$tag_commitish"
           echo "##[set-output name=release_tag;]$release_tag"
       # - name: Create Release
