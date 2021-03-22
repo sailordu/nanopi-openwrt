@@ -95,7 +95,7 @@ jobs:
       #   id: upload-release-asset
       #   uses: actions/upload-release-asset@v1
       #   env:
-      #     GITHUB_TOKEN: ${{ secrets.r2s_token }}
+      #     GITHUB_TOKEN: ${{ secrets.SEC_TOKEN }}
       #   with:
       #     upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
       #     asset_path: ./artifact.zip
@@ -104,7 +104,7 @@ jobs:
       - name: Upload Release Asset
         uses: biliwala/upload-release-action@v2
         with:
-          repo_token: ${{ secrets.r2s_token }}
+          repo_token: ${{ secrets.SEC_TOKEN }}
           file: ./release/*
           tag: ${{ steps.assemble_artifact.outputs.release_tag }}
           file_glob: true
